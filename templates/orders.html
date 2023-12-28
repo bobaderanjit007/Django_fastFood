@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+    /* Add the following CSS styles for star rating */
+    .rating {
+        display: flex;
+        justify-content: center;
+        flex-direction: row-reverse;
+    }
+
+    .rating input {
+        display: none;
+    }
+
+    .rating label {
+        font-size: 24px;
+        cursor: pointer;
+        color: #ccc;
+    }
+
+    .rating label:hover,
+    .rating input:checked ~ label {
+        color: #ffcc00;
+    }
+</style>
+
+<div class="container mt-5" style="padding-top: 100px;">
+    <h1 class="block-title text-center">Order Details</h1>
+    <div class="row" style="display:flex; justify-content:center;">
+    {% if orders %}
+    
+        {% for order in orders %}
+        
+        <!-- Repeat the following block for each product -->
+        <div class="col-md-4 mb-4">
+            <div class="card cart" style="border: 1px solid gray; padding: 10px; border-radius: 7px; margin: 10px 0px;">
+                <img src="{{order.product.image.url}}" alt="Product Image" class="img-thumbnail">
+                <div class="card-body">
+                    <h3 class="card-title" style="font-size: 25px; margin-top: 5px;">{{order.product.product}}</h3>
+                    <input type="number" readonly=true value="{{order.item_count}}" min="1" class="form-control mb-2">
+                    <p class="card-text">Price: ₹{{order.item_price}}</p>
+                    <form method="POST">
+                    {% csrf_token %}
+                    <!-- Order Details -->
+                    <div>
+                        <p>Ordered Date: {{order.order_date}}</p>
+                        
+                        <!-- Total Price -->
+                        <p>Total Price: ₹{{order.total_price}}</p>
+
+                        <!-- Star Rating Input -->
+                        <div class="rating">
+                            <input type="radio" id="star5" name="rating" value="5">
+                            <label for="star5">★</label>
+                            <input type="radio" id="star4" name="rating" value="4">
+                            <label for="star4">★</label>
+                            <input type="radio" id="star3" name="rating" value="3">
+                            <label for="star3">★</label>
+                            <input type="radio" id="star2" name="rating" value="2">
+                            <label for="star2">★</label>
+                            <input type="radio" id="star1" name="rating" value="1">
+                            <label for="star1">★</label>
+                        </div>
+                    </div>
+                    <input type="hidden" value="{{order.id}}" name="orderId">
+
+                    <!-- Submit Rating Button -->
+                    <button class="btn btn-primary mt-2" type="submit">Submit Rating</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End product block -->
+        {% endfor %}
+
+        {% else %}
+
+        <div class="container" style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
+            <img src="{% static 'images/empty-cart.png' %}" class="image-center" alt="empty">
+            {% comment %} <h2 class="text-center">Cart is Empty</h2> {% endcomment %}
+        </div>
+
+
+    {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock content %}

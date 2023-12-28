@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="container mt-5" style="padding-top: 100px;">
+        <h1 class="block-title text-center">My Cart</h1>
+     <div class="row" style="display:flex; justify-content:center;" >
+
+    {% if products %}
+    
+    
+     {% for product in products %}
+        <!-- Repeat the following block for each product -->
+        <div class="col-md-4 mb-4" >
+            <div class="card" style="border: 1px solid gray; padding: 10px; border-radius: 7px; margin: 10px 0px;">
+                <img src="{{product.image.url}}" alt="Product Image" class="img-thumbnail" >
+                <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <h3 class="card-title" style="font-size: 25px;">{{product.product}}</h3>
+                    <p class="card-text">Price: ₹{{product.price}}</p>
+                    <input type="number" value="1" min="1" class="form-control mb-2" name="unit">
+                    <input type="hidden" type="number" value="{{product.id}}" min="1" class="form-control mb-2" name="productId">
+                    {% comment %} <p class="card-text">Total: ₹{{product.price}}</p> {% endcomment %}
+                    <div style="margin-bottom: 10px; padding-top:10px;">
+                        <a class="btn btn-danger btn-sm p-2" href="delete/{{user.id}}/{{product.id}}"><i class="fa-solid fa-trash"></i> Remove</a>
+                        {% comment %} <a class="btn btn-success btn-sm p-2" href="/checkout/{{product.id}}"><i class="fa-solid fa-bag-shopping"></i> Checkout</a> {% endcomment %}
+                        <button  class="btn btn-success btn-sm p-2" type="submit" ><i class="fa-solid fa-bag-shopping"></i> Checkout</button>                        
+                    </div>
+                </form>
+                </div>
+            </div>
+        </div>
+        <!-- End product block -->
+
+     {% endfor %}
+
+     {% else %}
+        <div class="container" style="display: flex; align-items: center; flex-direction: column; justify-content: center;">
+            <img src="{% static 'images/empty-cart.png' %}" class="image-center" alt="empty">
+            {% comment %} <h2 class="text-center">Cart is Empty</h2> {% endcomment %}
+        </div>
+
+    {% endif %}
+
+    </div>
+</div>
+
+
+{% endblock content %}

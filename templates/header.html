@@ -1,0 +1,88 @@
+ {% load static%}
+ <div id="site-header">
+        <header id="header" class="header-block-top fixed-menu">
+            <div class="container">
+                <div class="row">
+                    <div class="main-menu">
+                        <!-- navbar -->
+                        <nav class="navbar navbar-default" id="mainNav">
+                            <div class="navbar-header">
+                                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                                    <span class="sr-only">Toggle navigation</span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                    <span class="icon-bar"></span>
+                                </button>
+                                <div class="logo">
+                                    <a class="navbar-brand js-scroll-trigger logo-header" href="#">
+                                        <img src="{% static 'images/logo.png' %}" alt="imgLogo">
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="navbar" class="navbar-collapse collapse">
+                                <ul class="nav navbar-nav navbar-right">
+                                    <li class="{% if request.path == '/' %} active {% endif %}"><a href="/">Home</a></li>
+                                    <li class="{% if request.path == '/about/' %} active {% endif %}"><a href="/about/">About us</a></li>
+                                    <li class="{% if request.path == '/contact/' %} active {% endif %}" ><a href="/contact/">Contact</a></li>
+                                    <li class="{% if request.path == '/orders/' %} active {% endif %}" ><a href="/orders/{{user.id}}">Orders</a></li>
+                                    <li class="{% if request.path == '/cart/' %} active {% endif %}" ><a href="/cart/{{user.id}}">Cart</a></li>
+                                    <li style=" display: flex;align-items: end;top: 25px;">
+                                    {% if request.path == "/login/" %}
+                                    <a href="/signup/" class="hvr-underline-from-center" style="color: white;
+                                        background: #e75b1e;
+                                        border: 3px solid #e75b1e;
+                                        height: 33px;
+                                        text-align: center;
+                                        justify-content: center;
+                                        padding: 5px 15px;
+                                        border-radius: 7px;">SignUp</a>
+                                    
+                                    {% elif request.path == '/signup/' %}
+                                        <a href="/login/" class="hvr-underline-from-center" style="color: white;
+                                        background: #e75b1e;
+                                        border: 3px solid #e75b1e;
+                                        height: 33px;
+                                        text-align: center;
+                                        justify-content: center;
+                                        padding: 5px 15px;
+                                        border-radius: 7px;">Login</a>
+                                    {% elif user.is_authenticated %}
+                                    <div class="dropdown">
+                                        <a href="/" class="hvr-underline-from-center btn dropdown-toggle" data-bs-toggle="dropdown" style="color: white;
+                                        background: #e75b1e;
+                                        border: 3px solid #e75b1e;
+                                        height: 33px;
+                                        text-align: center;
+                                        justify-content: center;
+                                        padding: 5px 15px;
+                                        border-radius: 7px;">Welcome,  {{user.username}}</a>
+                                        <ul class="dropdown-menu" style="right: 20px;">
+                                            <li><a class="dropdown-item" style="padding: 7px 0;" href="/update/{{user.id}}">Update user</a></li>
+                                            <li><a class="dropdown-item" style="padding: 7px 0;" href="/logout/">Logout</a></li>
+                                        </ul>
+                                    </div>
+
+                                    {% else %}
+                                    <a href="/login/" class="hvr-underline-from-center" style="color: white;
+                                        background: #e75b1e;
+                                        border: 3px solid #e75b1e;
+                                        height: 33px;
+                                        text-align: center;
+                                        justify-content: center;
+                                        padding: 5px 15px;
+                                        border-radius: 7px;">Login</a>
+                                    {% endif %}
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- end nav-collapse -->
+                        </nav>
+                        <!-- end navbar -->
+                    </div>
+                </div>
+                <!-- end row -->
+            </div>
+            <!-- end container-fluid -->
+        </header>
+        <!-- end header -->
+    </div>
