@@ -1,16 +1,16 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login , logout
 from django.contrib import messages
 from .models import Profile, Products, Cart, Orders
 from django.urls import reverse
+from django.db.models import Sum, F
 
 # Create your views here.
 
 def home(request):
     products = Products.objects.all()
-
     context = {'products': products}
     return render(request, "home.html", context)
 
@@ -20,7 +20,6 @@ def loginPage(request):
         if request.method == "POST":
             email = request.POST.get("email")
             password = request.POST.get("password")
-
 
             user = User.objects.filter(email = email).first()
             if not user:
@@ -130,17 +129,38 @@ def orders(request, pk):
     order = Orders.objects.filter(user = user)
     context = {'orders': order}
 
-    try:
-        if request.method == "POST":
-            rating = request.POST.get('rating')
-            order_id = request.POST.get('orderId')
+    if request.method == "POST":
+        rating = request.POST.get('rating')
+        order_id = request.POST.get('orderId')
 
-            order = Orders.objects.get(id = order_id)
-            order.rating = rating
-            order.save()
+        if not rating:
+            messages.info(request,'First, give a rating to products that were ordered before this product!')
+            return render(request, "orders.html", context)
 
-    except Exception as e:
-        print(e)
+        order = Orders.objects.filter(id = order_id).order_by('-id').first()
+        order.rating = rating
+        order.save()
+        try:
+                
+            userCount = Orders.objects.filter(product = order.product , rating__gt=0).count()
+            total_rating = Orders.objects.filter(product = order.product).aggregate(Sum('rating'))['rating__sum']
+            setProduct = Products.objects.get(product = order.product)
+            if userCount > 0:
+                setProduct.users = userCount
+                # Calculate the new average rating
+                setProduct.rating = round(total_rating / userCount, 1)
+            else:
+                setProduct.users = 0
+                setProduct.rating = 0
+
+            setProduct.save()
+
+            
+
+        except Exception as e:
+            print("Ex >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ", e)
+    
+    
 
     return render(request, "orders.html", context)
 

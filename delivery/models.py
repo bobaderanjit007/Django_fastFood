@@ -20,6 +20,7 @@ class Products(models.Model):
     product = models.CharField(max_length=100)
     price = models.IntegerField()
     rating = models.FloatField()
+    users = models.IntegerField()
     image = models.ImageField(upload_to='productImages/')
 
     def __str__(self):
@@ -48,3 +49,4 @@ class Orders(models.Model):
     total_price = models.IntegerField()
     order_date = models.DateField(default=timezone.now)
     rating = models.IntegerField(blank=True, default=0)
+
